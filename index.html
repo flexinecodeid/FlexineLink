@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FlexineLink | Publikasi Profesional</title>
     
     <!-- Google Fonts -->
@@ -34,35 +34,37 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 
     <style>
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
+        /* Scrollbar Halus */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
         .view-section { display: none; opacity: 0; }
         .view-section.active { display: block; }
 
-        /* Styling Prose Editor */
+        /* Styling Prose Editor yang Responsif */
         .editor-content:empty:before { content: attr(data-placeholder); color: #9ca3af; pointer-events: none; display: block; }
-        .prose-content { color: #374151; line-height: 1.8; word-wrap: break-word; }
-        .prose-content h1 { font-family: 'Poppins', sans-serif; font-size: 2.25rem; font-weight: 700; margin: 2rem 0 1rem; color: #111; }
-        .prose-content h2 { font-family: 'Poppins', sans-serif; font-size: 1.75rem; font-weight: 600; margin: 1.5rem 0 0.75rem; color: #111; }
+        .prose-content { color: #374151; line-height: 1.7; word-wrap: break-word; overflow-wrap: break-word; }
+        .prose-content h1 { font-family: 'Poppins', sans-serif; font-size: clamp(1.75rem, 4vw, 2.25rem); font-weight: 700; margin: 1.5rem 0 1rem; color: #111; line-height: 1.3;}
+        .prose-content h2 { font-family: 'Poppins', sans-serif; font-size: clamp(1.5rem, 3vw, 1.75rem); font-weight: 600; margin: 1.25rem 0 0.75rem; color: #111; line-height: 1.3;}
         .prose-content p { margin-bottom: 1rem; }
         .prose-content b, .prose-content strong { font-weight: 700; color: #111; }
         .prose-content i, .prose-content em { font-style: italic; }
         .prose-content u { text-decoration: underline; text-underline-offset: 3px; }
+        .prose-content img { max-width: 100%; height: auto; border-radius: 0.5rem; }
         
         /* Desain Link Estetik */
-        .prose-content a.text-link { color: #2563eb; text-decoration: none; font-weight: 600; border-bottom: 2px solid #93c5fd; transition: all 0.2s; }
-        .prose-content a.text-link:hover { color: #1d4ed8; border-bottom-color: #2563eb; background-color: #eff6ff; }
-        .prose-content blockquote { border-left: 4px solid #ef4444; padding-left: 1.25rem; color: #b91c1c; margin: 1.5rem 0; background: #fef2f2; padding-top: 1rem; padding-bottom: 1rem; border-radius: 0 0.5rem 0.5rem 0; font-weight: 500;}
+        .prose-content a.text-link { color: #2563eb; text-decoration: none; font-weight: 600; border-bottom: 2px solid #bfdbfe; transition: all 0.2s; word-break: break-all;}
+        .prose-content a.text-link:hover { color: #1d4ed8; border-bottom-color: #3b82f6; background-color: #eff6ff; }
+        .prose-content blockquote { border-left: 4px solid #ef4444; padding-left: 1rem; color: #b91c1c; margin: 1.5rem 0; background: #fef2f2; padding-top: 0.75rem; padding-bottom: 0.75rem; border-radius: 0 0.5rem 0.5rem 0; font-weight: 500;}
         
         /* Custom Button di Editor */
         .prose-content a.custom-btn {
-            display: inline-block; background-color: #111111; color: #ffffff; padding: 0.6rem 1.5rem;
+            display: inline-block; background-color: #111111; color: #ffffff; padding: 0.5rem 1.2rem;
             border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-family: 'Poppins', sans-serif;
             margin: 0.5rem 0; transition: all 0.2s; text-align: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            word-break: break-word;
         }
         .prose-content a.custom-btn:hover { background-color: #3b82f6; transform: translateY(-2px); box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.15); }
         .toolbar-btn { transition: all 0.2s; cursor: pointer; }
@@ -72,30 +74,27 @@
 </head>
 <body class="text-gray-800 font-sans antialiased min-h-screen flex flex-col relative selection:bg-brand-900 selection:text-white">
 
-    <!-- Latar Belakang Buku + Efek Blur Glassmorphism -->
-    <div class="fixed inset-0 z-[-1]">
-        <!-- Foto Latar Belakang dari Unsplash -->
-        <div class="fixed inset-0 z-[-1]">
+    <!-- Latar Belakang Kertas (Kaca Buram Dihapus Biar 100% Jelas) -->
+    <div class="fixed inset-0 z-[-1] bg-gray-50">
+        <!-- Panggil file gambar yang ada di GitHub -->
         <div class="absolute inset-0 bg-[url('kertas.jpg')] bg-cover bg-center bg-fixed opacity-100"></div>
-        <!-- Lapisan Kaca Putih Buram (Supaya teks gampang dibaca) -->
-        <div class="absolute inset-0 bg-white/80 backdrop-blur-sm"></div>
     </div>
 
     <!-- Loading Screen -->
     <div id="loading-screen" class="fixed inset-0 bg-white z-50 flex items-center justify-center flex-col gap-4 transition-opacity duration-500">
-        <div class="w-12 h-12 border-4 border-gray-200 border-t-brand-900 rounded-full animate-spin"></div>
-        <p class="text-gray-500 font-medium animate-pulse">Menghubungkan ke Flexine...</p>
+        <div class="w-10 h-10 md:w-12 md:h-12 border-4 border-gray-200 border-t-brand-900 rounded-full animate-spin"></div>
+        <p class="text-sm md:text-base text-gray-500 font-medium animate-pulse">Menghubungkan ke Flexine...</p>
     </div>
 
-    <!-- Navbar Dinamis -->
-    <nav class="sticky top-0 z-40 bg-white/70 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
-        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-            <button onclick="navigate('home')" class="font-heading text-2xl font-bold text-brand-900 flex items-center gap-2 group hover:text-blue-600 transition-colors">
-                <div class="w-8 h-8 bg-brand-900 text-white rounded-lg flex items-center justify-center text-lg transition-transform group-hover:-rotate-6 group-hover:bg-blue-600">P</div>
-                Flexinelink
+    <!-- Navbar Dinamis yang Responsive -->
+    <nav class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
+            <button onclick="navigate('home')" class="font-heading text-xl md:text-2xl font-bold text-brand-900 flex items-center gap-2 group hover:text-blue-600 transition-colors">
+                <div class="w-7 h-7 md:w-8 md:h-8 bg-brand-900 text-white rounded-lg flex items-center justify-center text-base md:text-lg transition-transform group-hover:-rotate-6 group-hover:bg-blue-600">P</div>
+                <span class="hidden sm:inline">Flexinelink</span>
             </button>
             
-            <div id="nav-actions" class="flex items-center gap-4">
+            <div id="nav-actions" class="flex items-center gap-2 md:gap-4">
                 <!-- Diisi oleh JavaScript tergantung status Login -->
             </div>
         </div>
@@ -103,62 +102,61 @@
 
     <main class="flex-grow w-full relative">
         <!-- ================= VIEW: BERANDA ================= -->
-        <section id="view-home" class="view-section w-full py-12">
-            <div class="max-w-6xl mx-auto px-6">
-                <div class="text-center max-w-3xl mx-auto mb-16 pt-8">
-                    <h1 class="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-brand-900 mb-6 drop-shadow-sm">
-                        Publikasi Ide Anda <br> <span class="text-gray-500">Secara Profesional.</span>
+        <section id="view-home" class="view-section w-full py-8 md:py-12">
+            <div class="max-w-6xl mx-auto px-4 md:px-6">
+                <div class="text-center max-w-3xl mx-auto mb-10 md:mb-16 pt-4 md:pt-8">
+                    <h1 class="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-brand-900 mb-4 md:mb-6 drop-shadow-sm leading-tight">
+                        Publikasi Ide Anda <br> <span class="text-gray-600">Secara Profesional.</span>
                     </h1>
-                    <p class="text-lg text-gray-600 mb-8 font-medium">Buat catatan atau tautan rahasia dengan editor kaya fitur.</p>
+                    <p class="text-base md:text-lg text-gray-700 mb-8 font-medium px-4">Buat catatan atau tautan rahasia dengan editor kaya fitur.</p>
                 </div>
-                <div class="flex items-center justify-between mb-8 border-b border-gray-300 pb-4">
-                    <h2 class="font-heading text-2xl font-bold text-gray-900 drop-shadow-sm">Jelajahi Tulisan Publik</h2>
+                <div class="flex items-center justify-between mb-6 border-b border-gray-300 pb-3">
+                    <h2 class="font-heading text-xl md:text-2xl font-bold text-gray-900 drop-shadow-sm">Jelajahi Tulisan</h2>
                 </div>
-                <div id="paste-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-12"></div>
+                <div id="paste-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pb-12"></div>
             </div>
         </section>
 
         <!-- ================= VIEW: EDITOR ================= -->
-        <section id="view-create" class="view-section w-full py-12">
-            <div class="max-w-4xl mx-auto px-6">
-                <!-- Efek Glassmorphism di Form Editor -->
-                <div class="bg-white/90 backdrop-blur-md border border-gray-200 rounded-3xl p-6 md:p-10 shadow-xl">
-                    <h2 class="font-heading text-3xl font-bold text-brand-900 mb-8">Tulis Sesuatu</h2>
+        <section id="view-create" class="view-section w-full py-6 md:py-12">
+            <div class="max-w-4xl mx-auto px-3 md:px-6">
+                <div class="bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl md:rounded-3xl p-5 md:p-10 shadow-xl">
+                    <h2 class="font-heading text-2xl md:text-3xl font-bold text-brand-900 mb-6 md:mb-8">Tulis Sesuatu</h2>
                     <form id="form-create" onsubmit="handleCreatePaste(event)">
                         <input type="text" id="input-title" required placeholder="Judul Tulisan..." 
-                            class="w-full text-3xl md:text-4xl font-heading font-bold text-gray-900 placeholder-gray-400 bg-transparent border-none outline-none mb-6">
+                            class="w-full text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-gray-900 placeholder-gray-400 bg-transparent border-none outline-none mb-6">
                         
-                        <div class="mb-8 flex flex-col md:flex-row gap-6 bg-gray-100/50 p-4 rounded-xl border border-gray-200">
+                        <div class="mb-6 md:mb-8 flex flex-col sm:flex-row gap-4 md:gap-6 bg-gray-100/50 p-3 md:p-4 rounded-xl border border-gray-200">
                             <div class="flex-1">
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Penulis (Otomatis)</label>
-                                <input type="text" id="input-author" readonly class="w-full text-brand-900 font-bold bg-transparent border-b border-gray-300 py-1 cursor-not-allowed">
+                                <label class="block text-[10px] md:text-xs font-bold text-gray-500 uppercase mb-1">Penulis</label>
+                                <input type="text" id="input-author" readonly class="w-full text-brand-900 text-sm md:text-base font-bold bg-transparent border-b border-gray-300 py-1 cursor-not-allowed outline-none">
                             </div>
                             <div class="flex-1">
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Kata Sandi (Opsional)</label>
-                                <input type="password" id="input-password" placeholder="Kosongkan jika publik" class="w-full text-gray-800 bg-transparent border-b border-gray-300 focus:border-brand-900 outline-none py-1">
+                                <label class="block text-[10px] md:text-xs font-bold text-gray-500 uppercase mb-1">Kata Sandi (Opsional)</label>
+                                <input type="password" id="input-password" placeholder="Kosongkan jika publik" class="w-full text-gray-800 text-sm md:text-base bg-transparent border-b border-gray-300 focus:border-brand-900 outline-none py-1">
                             </div>
                         </div>
 
-                        <div class="mb-8 border border-gray-300 rounded-2xl overflow-hidden shadow-inner bg-white">
-                            <!-- TOOLBAR EDITOR (SUDAH FIX BUG KURSOR LONCAT PAKAI preventDefault) -->
-                            <div class="bg-gray-50 border-b border-gray-200 p-2 flex flex-wrap gap-1 items-center sticky top-0 z-10">
-                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('bold')" class="toolbar-btn w-8 h-8 font-bold rounded">B</button>
-                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('italic')" class="toolbar-btn w-8 h-8 italic font-serif rounded">I</button>
-                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('underline')" class="toolbar-btn w-8 h-8 underline rounded">U</button>
-                                <div class="w-px h-5 bg-gray-300 mx-1"></div>
-                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('formatBlock', 'H1')" class="toolbar-btn px-2 h-8 font-bold text-sm rounded">H1</button>
-                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('formatBlock', 'H2')" class="toolbar-btn px-2 h-8 font-bold text-sm rounded">H2</button>
-                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('formatBlock', 'BLOCKQUOTE')" class="toolbar-btn w-8 h-8 text-red-600 font-bold text-lg rounded" title="Kotak Warning Merah">!</button>
-                                <div class="w-px h-5 bg-gray-300 mx-1"></div>
-                                <button type="button" onmousedown="event.preventDefault();" onclick="openInsertModal('link')" class="toolbar-btn px-2 h-8 text-blue-600 text-sm font-bold bg-blue-50 rounded hover:bg-blue-100">+ Link</button>
-                                <button type="button" onmousedown="event.preventDefault();" onclick="openInsertModal('button')" class="toolbar-btn px-2 h-8 text-white bg-brand-900 text-sm font-bold rounded hover:bg-gray-800 ml-1">+ Tombol</button>
+                        <!-- TOOLBAR EDITOR RESPONSIVE -->
+                        <div class="mb-6 md:mb-8 border border-gray-300 rounded-xl md:rounded-2xl overflow-hidden shadow-inner bg-white">
+                            <div class="bg-gray-50 border-b border-gray-200 p-2 flex flex-wrap gap-1 md:gap-2 items-center sticky top-0 z-10 overflow-x-auto whitespace-nowrap">
+                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('bold')" class="toolbar-btn w-7 h-7 md:w-8 md:h-8 font-bold rounded flex-shrink-0">B</button>
+                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('italic')" class="toolbar-btn w-7 h-7 md:w-8 md:h-8 italic font-serif rounded flex-shrink-0">I</button>
+                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('underline')" class="toolbar-btn w-7 h-7 md:w-8 md:h-8 underline rounded flex-shrink-0">U</button>
+                                <div class="w-px h-4 bg-gray-300 mx-1 flex-shrink-0"></div>
+                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('formatBlock', 'H1')" class="toolbar-btn px-2 h-7 md:h-8 font-bold text-xs md:text-sm rounded flex-shrink-0">H1</button>
+                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('formatBlock', 'H2')" class="toolbar-btn px-2 h-7 md:h-8 font-bold text-xs md:text-sm rounded flex-shrink-0">H2</button>
+                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('formatBlock', 'BLOCKQUOTE')" class="toolbar-btn w-7 h-7 md:w-8 md:h-8 text-red-600 font-bold text-base md:text-lg rounded flex-shrink-0" title="Kotak Peringatan">!</button>
+                                <div class="w-px h-4 bg-gray-300 mx-1 flex-shrink-0"></div>
+                                <button type="button" onmousedown="event.preventDefault();" onclick="openInsertModal('link')" class="toolbar-btn px-2 md:px-3 h-7 md:h-8 text-blue-600 text-xs md:text-sm font-bold bg-blue-50 rounded hover:bg-blue-100 flex-shrink-0">+ Link</button>
+                                <button type="button" onmousedown="event.preventDefault();" onclick="openInsertModal('button')" class="toolbar-btn px-2 md:px-3 h-7 md:h-8 text-white bg-brand-900 text-xs md:text-sm font-bold rounded hover:bg-gray-800 ml-1 flex-shrink-0">+ Tombol</button>
                             </div>
-                            <div id="editor-content" contenteditable="true" class="w-full min-h-[400px] p-6 outline-none bg-white editor-content prose-content" data-placeholder="Ketik rahasiamu di sini..."></div>
+                            <div id="editor-content" contenteditable="true" class="w-full min-h-[300px] md:min-h-[400px] p-4 md:p-6 outline-none bg-white editor-content prose-content text-sm md:text-base" data-placeholder="Ketik rahasiamu di sini..."></div>
                         </div>
                         
-                        <div class="flex justify-end gap-3 pt-6 border-t border-gray-200">
-                            <button type="button" onclick="navigate('home')" class="px-6 py-3 text-gray-500 hover:bg-gray-100 rounded-full font-medium transition-colors">Batal</button>
-                            <button type="submit" id="btn-publish" class="bg-brand-900 text-white px-8 py-3 rounded-full font-medium hover:bg-black transition-colors shadow-md">Publikasikan</button>
+                        <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 border-t border-gray-200">
+                            <button type="button" onclick="navigate('home')" class="w-full sm:w-auto px-6 py-3 text-gray-600 hover:bg-gray-100 rounded-full font-medium transition-colors text-sm md:text-base">Batal</button>
+                            <button type="submit" id="btn-publish" class="w-full sm:w-auto bg-brand-900 text-white px-8 py-3 rounded-full font-medium hover:bg-black transition-colors shadow-md text-sm md:text-base">Publikasikan</button>
                         </div>
                     </form>
                 </div>
@@ -166,77 +164,63 @@
         </section>
 
         <!-- ================= VIEW: BACA TULISAN ================= -->
-        <section id="view-read" class="view-section w-full py-12">
-            <div class="max-w-3xl mx-auto px-6">
-                <!-- Toolbar Atas (Dinamic dengan Tombol Hapus) -->
-                <div class="flex items-center justify-between mb-10 pb-4 border-b border-gray-300">
-                    <button onclick="navigate('home')" class="text-gray-700 bg-white/80 px-4 py-2 rounded-full shadow-sm font-medium hover:text-brand-900 backdrop-blur-sm border border-gray-200">← Kembali</button>
+        <section id="view-read" class="view-section w-full py-6 md:py-12">
+            <div class="max-w-3xl mx-auto px-4 md:px-6">
+                <!-- Toolbar Atas Responsive -->
+                <div class="flex flex-wrap items-center justify-between mb-6 md:mb-10 pb-4 border-b border-gray-300 gap-3">
+                    <button onclick="navigate('home')" class="text-sm md:text-base text-gray-800 bg-white/90 px-4 py-2 rounded-full shadow-sm font-medium hover:bg-gray-50 backdrop-blur-sm border border-gray-200">← Kembali</button>
                     
                     <div id="read-actions" class="flex items-center gap-2">
                         <!-- Diisi Otomatis oleh JavaScript (Hapus & Salin) -->
                     </div>
                 </div>
 
-                <!-- Konten Tulisan dengan Efek Glassmorphism -->
-                <article class="bg-white/95 backdrop-blur-md border border-gray-200 shadow-xl rounded-3xl p-8 md:p-12">
-                    <header class="mb-10 border-b border-gray-100 pb-8">
-                        <h1 id="read-title" class="font-heading text-4xl md:text-5xl font-bold text-brand-900 mb-6 leading-tight">Memuat...</h1>
-                        <div class="flex items-center gap-3 text-gray-600 text-sm bg-gray-100/80 inline-flex px-4 py-2 rounded-full border border-gray-200">
-                            <span id="read-author" class="font-bold text-gray-800">Loading</span>
+                <!-- Konten Tulisan -->
+                <article class="bg-white/95 backdrop-blur-md border border-gray-200 shadow-xl rounded-2xl md:rounded-3xl p-5 sm:p-8 md:p-12 overflow-hidden">
+                    <header class="mb-6 md:mb-10 border-b border-gray-100 pb-6 md:pb-8">
+                        <h1 id="read-title" class="font-heading text-2xl sm:text-3xl md:text-5xl font-bold text-brand-900 mb-4 md:mb-6 leading-tight break-words">Memuat...</h1>
+                        <div class="flex items-center flex-wrap gap-2 md:gap-3 text-gray-700 text-xs md:text-sm bg-gray-100/80 inline-flex px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-gray-200">
+                            <span id="read-author" class="font-bold">Loading</span>
                             <span class="text-gray-400">|</span> <span id="read-date">...</span>
                         </div>
                     </header>
-                    <div id="read-content" class="prose-content text-lg break-words pb-10"></div>
+                    <div id="read-content" class="prose-content text-base md:text-lg break-words pb-8"></div>
                 </article>
             </div>
         </section>
     </main>
 
-    <!-- Modal Login -->
-    <div id="login-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-        <div id="login-card" class="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300 text-center">
-            <div class="w-16 h-16 bg-brand-900 rounded-2xl flex items-center justify-center mb-6 mx-auto text-white text-3xl font-bold font-heading">P</div>
-            <h3 class="font-heading text-2xl font-bold text-brand-900 mb-2">Masuk ke Flexine</h3>
-            <p class="text-gray-500 text-sm mb-8">Login diperlukan untuk membuat dan mempublikasikan tulisan.</p>
-            
-            <button onclick="loginWithGoogle()" class="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 text-gray-700 font-medium py-3 rounded-xl hover:bg-gray-50 transition-colors mb-4 shadow-sm">
-                <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-                Lanjutkan dengan Google
-            </button>
-            <button onclick="closeLoginModal()" class="text-sm text-gray-500 hover:text-brand-900 font-medium">Batal</button>
-        </div>
-    </div>
-
     <!-- Modal Form Insert -->
-    <div id="insert-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-        <div id="insert-card" class="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
-            <h3 id="insert-modal-title" class="font-heading text-xl font-bold text-brand-900 mb-4">Tambahkan Tautan</h3>
-            <input type="url" id="custom-url" placeholder="https://" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mb-4 focus:border-brand-900 outline-none">
-            <input type="text" id="custom-text" placeholder="Teks Tampilan" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mb-6 focus:border-brand-900 outline-none">
+    <div id="insert-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 px-4">
+        <div id="insert-card" class="bg-white rounded-2xl p-5 md:p-6 max-w-sm w-full shadow-2xl transform scale-95 transition-transform duration-300">
+            <h3 id="insert-modal-title" class="font-heading text-lg md:text-xl font-bold text-brand-900 mb-4">Tambahkan Tautan</h3>
+            <input type="url" id="custom-url" placeholder="https://..." class="w-full text-sm md:text-base bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 md:py-3 mb-3 focus:border-brand-900 outline-none">
+            <input type="text" id="custom-text" placeholder="Teks Tampilan (Opsional)" class="w-full text-sm md:text-base bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 md:py-3 mb-5 focus:border-brand-900 outline-none">
             <input type="hidden" id="custom-type" value="link">
             <div class="flex gap-2">
-                <button onclick="closeInsertModal()" class="flex-1 py-2 bg-gray-100 rounded-lg font-medium hover:bg-gray-200">Batal</button>
-                <button onclick="applyCustomInsert()" class="flex-1 py-2 bg-brand-900 text-white rounded-lg font-medium hover:bg-black">Sisipkan</button>
+                <button onclick="closeInsertModal()" class="flex-1 py-2 md:py-3 text-sm md:text-base bg-gray-100 rounded-lg font-medium hover:bg-gray-200">Batal</button>
+                <button onclick="applyCustomInsert()" class="flex-1 py-2 md:py-3 text-sm md:text-base bg-brand-900 text-white rounded-lg font-medium hover:bg-black">Sisipkan</button>
             </div>
         </div>
     </div>
 
     <!-- Modal Sandi -->
-    <div id="password-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-        <div id="password-card" class="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl transform scale-95 text-center">
-            <h3 class="font-heading text-2xl font-bold text-brand-900 mb-2">Akses Terkunci</h3>
+    <div id="password-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 px-4">
+        <div id="password-card" class="bg-white rounded-2xl md:rounded-3xl p-6 md:p-8 max-w-sm w-full shadow-2xl transform scale-95 text-center">
+            <h3 class="font-heading text-xl md:text-2xl font-bold text-brand-900 mb-2">Akses Terkunci</h3>
+            <p class="text-xs md:text-sm text-gray-500 mb-5">Masukkan kata sandi untuk membaca tulisan ini.</p>
             <form onsubmit="verifyPassword(event)">
-                <input type="password" id="verify-password-input" required class="w-full bg-gray-50 border rounded-xl px-4 py-3 mb-4 text-center text-lg focus:border-brand-900 outline-none">
+                <input type="password" id="verify-password-input" required placeholder="Kata Sandi..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mb-3 text-center text-base md:text-lg focus:border-brand-900 outline-none">
                 <p id="password-error" class="text-red-500 text-xs mb-4 hidden font-bold">Sandi salah!</p>
-                <div class="flex gap-2">
-                    <button type="button" onclick="cancelPassword()" class="flex-1 py-3 bg-gray-100 rounded-xl font-medium">Batal</button>
-                    <button type="submit" class="flex-1 py-3 bg-brand-900 text-white rounded-xl font-medium hover:bg-black">Buka Kunci</button>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <button type="button" onclick="cancelPassword()" class="flex-1 py-3 bg-gray-100 rounded-xl font-medium text-sm md:text-base">Kembali</button>
+                    <button type="submit" class="flex-1 py-3 bg-brand-900 text-white rounded-xl font-medium hover:bg-black text-sm md:text-base shadow-md">Buka Kunci</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full shadow-xl text-sm font-medium opacity-0 pointer-events-none z-50">Notifikasi</div>
+    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-5 py-3 rounded-full shadow-2xl text-xs md:text-sm font-medium opacity-0 pointer-events-none z-[60] whitespace-nowrap">Notifikasi</div>
 
     <script>
         // ==========================================
@@ -251,7 +235,7 @@
         let currentView = '';
         let currentUser = null; 
         let attemptReadId = null;
-        let savedSelectionRange = null; // Menyimpan kursor saat modal insert terbuka
+        let savedSelectionRange = null;
 
         document.addEventListener('DOMContentLoaded', () => {
             initAuth();
@@ -280,13 +264,20 @@
             await fetchPastes();
         }
 
+        // FUNGSI LOGIN LANGSUNG (TANPA MODAL)
         async function loginWithGoogle() {
-            const redirectUrl = window.location.origin + window.location.pathname;
-            const { error } = await supabaseClient.auth.signInWithOAuth({
-                provider: 'google',
-                options: { redirectTo: redirectUrl }
-            });
-            if(error) alert("Gagal terhubung ke Google.");
+            try {
+                // Notifikasi visual kalau tombol sudah diklik
+                showToast("Membuka halaman login Google...");
+                const redirectUrl = window.location.origin + window.location.pathname;
+                const { error } = await supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: { redirectTo: redirectUrl }
+                });
+                if(error) throw error;
+            } catch (error) {
+                alert("Gagal terhubung ke Google: " + error.message);
+            }
         }
 
         async function logout() {
@@ -302,29 +293,28 @@
                 const avatar = currentUser.user_metadata.avatar_url || '';
                 
                 navContainer.innerHTML = `
-                    <div class="flex items-center gap-4">
-                        <div class="hidden sm:flex items-center gap-2 bg-white/80 px-3 py-1.5 rounded-full border border-gray-200 shadow-sm backdrop-blur-sm">
+                    <div class="flex items-center gap-2 md:gap-4">
+                        <div class="hidden md:flex items-center gap-2 bg-white/90 px-3 py-1.5 rounded-full border border-gray-200 shadow-sm backdrop-blur-sm">
                             <img src="${avatar}" class="w-6 h-6 rounded-full" onerror="this.style.display='none'">
                             <span class="text-sm font-bold text-gray-800">${userName.split(' ')[0]}</span>
                         </div>
-                        <button onclick="logout()" class="text-sm text-red-500 font-bold hover:text-red-700 bg-white/80 px-3 py-1.5 rounded-full border border-red-100 shadow-sm backdrop-blur-sm transition-colors">Keluar</button>
-                        <button onclick="navigate('create')" class="bg-brand-900 hover:bg-black text-white px-5 py-2 rounded-full font-medium transition-all shadow-md">Tulis Baru</button>
+                        <button onclick="logout()" class="text-xs md:text-sm text-red-500 font-bold hover:text-red-700 bg-white/90 px-3 py-1.5 md:py-2 rounded-full border border-red-100 shadow-sm backdrop-blur-sm transition-colors">Keluar</button>
+                        <button onclick="navigate('create')" class="bg-brand-900 hover:bg-black text-white px-4 py-1.5 md:px-5 md:py-2 rounded-full font-medium transition-all shadow-md text-xs md:text-sm">Tulis Baru</button>
                     </div>
                 `;
                 
                 if(document.getElementById('input-author')) document.getElementById('input-author').value = userName;
             } else {
+                // TOMBOL LOGIN LANGSUNG DI NAVBAR
                 navContainer.innerHTML = `
-                    <button onclick="openLoginModal()" class="bg-white hover:bg-gray-50 border border-gray-200 text-gray-800 px-6 py-2 rounded-full font-bold transition-all shadow-sm flex items-center gap-2">
-                        <svg viewBox="0 0 24 24" width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-                        Login Google
+                    <button onclick="loginWithGoogle()" class="bg-white hover:bg-gray-50 border border-gray-200 text-gray-800 px-4 py-1.5 md:px-6 md:py-2 rounded-full font-bold transition-all shadow-sm flex items-center gap-2 cursor-pointer">
+                        <svg viewBox="0 0 24 24" width="16" height="16" class="w-4 h-4 md:w-5 md:h-5" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                        <span class="hidden sm:inline">Login Google</span>
+                        <span class="inline sm:hidden text-xs">Login</span>
                     </button>
                 `;
             }
         }
-
-        function openLoginModal() { gsap.to('#login-modal', { opacity: 1, duration: 0.2, onStart: ()=>document.getElementById('login-modal').classList.remove('pointer-events-none') }); gsap.to('#login-card', { scale: 1, duration: 0.3, ease: "back.out(1.5)" }); }
-        function closeLoginModal() { gsap.to('#login-card', { scale: 0.95, duration: 0.2 }); gsap.to('#login-modal', { opacity: 0, duration: 0.2, onComplete: () => document.getElementById('login-modal').classList.add('pointer-events-none') }); }
 
         // ==========================================
         // FETCH & ROUTING
@@ -353,7 +343,9 @@
         }
 
         function navigate(viewName, updateUrl = true) {
-            if (viewName === 'create' && !currentUser) return openLoginModal();
+            // Minta login langsung jika belum
+            if (viewName === 'create' && !currentUser) return loginWithGoogle(); 
+            
             if (currentView === viewName) return;
             if (updateUrl && viewName === 'home') window.history.pushState({}, '', window.location.pathname);
 
@@ -368,7 +360,7 @@
                     if(document.getElementById('form-create')) document.getElementById('form-create').reset();
                     document.getElementById('editor-content').innerHTML = '';
                 }
-                gsap.fromTo(newView, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3 });
+                gsap.fromTo(newView, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.3 });
                 currentView = viewName;
             };
 
@@ -377,14 +369,14 @@
         }
 
         // ==========================================
-        // RENDER GRID
+        // RENDER GRID (Mobile Friendly)
         // ==========================================
         function renderHomeGrid() {
             const grid = document.getElementById('paste-grid');
             grid.innerHTML = '';
             
             if (pastes.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500 bg-white/50 backdrop-blur-sm rounded-xl border border-gray-200">Belum ada tulisan. Jadilah yang pertama!</div>`;
+                grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-600 bg-white/70 backdrop-blur-md rounded-xl border border-gray-200 text-sm md:text-base">Belum ada tulisan. Jadilah yang pertama!</div>`;
                 return;
             }
 
@@ -392,28 +384,28 @@
                 const tempDiv = document.createElement("div");
                 tempDiv.innerHTML = DOMPurify.sanitize(paste.content);
                 const textContent = tempDiv.textContent || "";
-                const excerpt = textContent.length > 100 ? textContent.substring(0, 100) + '...' : textContent;
+                const excerpt = textContent.length > 80 ? textContent.substring(0, 80) + '...' : textContent;
 
                 const isLocked = paste.password && paste.password.length > 0;
-                const lockIcon = isLocked ? `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" class="text-red-500"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>` : '';
-                const myPostBadge = (currentUser && paste.user_id === currentUser.id) ? `<span class="absolute top-4 right-4 bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase shadow-sm">Milik Saya</span>` : '';
+                const lockIcon = isLocked ? `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" class="text-red-500"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>` : '';
+                const myPostBadge = (currentUser && paste.user_id === currentUser.id) ? `<span class="absolute top-3 right-3 bg-blue-100 text-blue-700 text-[9px] md:text-[10px] font-bold px-2 py-1 rounded-full uppercase shadow-sm">Milik Saya</span>` : '';
 
                 const card = document.createElement('div');
-                card.className = 'bg-white/90 backdrop-blur-md border border-gray-200 p-6 flex flex-col h-full hover:shadow-xl hover:-translate-y-1 hover:border-brand-900 transition-all duration-300 cursor-pointer rounded-3xl relative overflow-hidden group shadow-sm';
+                card.className = 'bg-white/95 backdrop-blur-md border border-gray-200 p-5 md:p-6 flex flex-col h-full hover:shadow-xl hover:-translate-y-1 hover:border-brand-900 transition-all duration-300 cursor-pointer rounded-2xl md:rounded-3xl relative overflow-hidden group shadow-sm';
                 
                 card.innerHTML = `
                     ${myPostBadge}
                     <div class="flex-grow">
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-xs font-bold text-gray-600 bg-white px-3 py-1 rounded-full flex items-center gap-1 border border-gray-100 shadow-sm">${lockIcon} #${paste.id.substring(0,5)}</span>
-                            <span class="text-xs text-gray-500 font-medium">${paste.date}</span>
+                        <div class="flex justify-between items-center mb-3 md:mb-4">
+                            <span class="text-[10px] md:text-xs font-bold text-gray-600 bg-gray-50 px-2 py-1 rounded-full flex items-center gap-1 border border-gray-200 shadow-sm">${lockIcon} #${paste.id.substring(0,5)}</span>
+                            <span class="text-[10px] md:text-xs text-gray-500 font-medium">${paste.date}</span>
                         </div>
-                        <h3 class="font-heading text-xl font-bold text-brand-900 mb-3 group-hover:text-blue-600 line-clamp-2">${DOMPurify.sanitize(paste.title)}</h3>
-                        <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">${isLocked ? '<i class="text-red-500 font-medium">Terkunci sandi rahasia.</i>' : excerpt}</p>
+                        <h3 class="font-heading text-lg md:text-xl font-bold text-brand-900 mb-2 md:mb-3 group-hover:text-blue-600 line-clamp-2 leading-snug">${DOMPurify.sanitize(paste.title)}</h3>
+                        <p class="text-gray-600 text-xs md:text-sm leading-relaxed line-clamp-3">${isLocked ? '<i class="text-red-500 font-medium">Terkunci sandi rahasia.</i>' : excerpt}</p>
                     </div>
-                    <div class="mt-6 pt-4 border-t border-gray-100 flex items-center gap-2">
-                        <div class="w-7 h-7 rounded-full bg-brand-900 text-white flex items-center justify-center text-xs font-bold uppercase shadow-sm">${paste.author.charAt(0)}</div>
-                        <span class="text-sm font-bold text-gray-800">${DOMPurify.sanitize(paste.author)}</span>
+                    <div class="mt-4 md:mt-6 pt-3 md:pt-4 border-t border-gray-100 flex items-center gap-2">
+                        <div class="w-6 h-6 md:w-7 md:h-7 rounded-full bg-brand-900 text-white flex items-center justify-center text-[10px] md:text-xs font-bold uppercase shadow-sm flex-shrink-0">${paste.author.charAt(0)}</div>
+                        <span class="text-xs md:text-sm font-bold text-gray-800 truncate">${DOMPurify.sanitize(paste.author)}</span>
                     </div>
                 `;
                 card.onclick = () => attemptLoadPaste(paste.id);
@@ -427,7 +419,7 @@
         // ==========================================
         async function handleCreatePaste(e) {
             e.preventDefault();
-            if(!currentUser) return openLoginModal(); 
+            if(!currentUser) return loginWithGoogle(); 
 
             const btn = document.getElementById('btn-publish');
             btn.disabled = true; btn.innerHTML = 'Menyimpan...';
@@ -435,9 +427,13 @@
             const titleInput = document.getElementById('input-title').value.trim();
             const passwordInput = document.getElementById('input-password').value;
             const rawHTML = document.getElementById('editor-content').innerHTML.trim();
-            const sanitizedHTML = DOMPurify.sanitize(rawHTML, { ALLOWED_TAGS: ['b', 'i', 'u', 'em', 'strong', 'a', 'p', 'br', 'h1', 'h2', 'blockquote', 'div', 'span'], ALLOWED_ATTR: ['href', 'target', 'class'] });
+            const sanitizedHTML = DOMPurify.sanitize(rawHTML, { ALLOWED_TAGS: ['b', 'i', 'u', 'em', 'strong', 'a', 'p', 'br', 'h1', 'h2', 'blockquote', 'div', 'span', 'img'], ALLOWED_ATTR: ['href', 'target', 'class', 'src', 'alt'] });
 
-            if (!titleInput || !sanitizedHTML) return alert("Judul dan isi tidak boleh kosong!");
+            if (!titleInput || !sanitizedHTML) {
+                alert("Judul dan isi tidak boleh kosong!");
+                btn.disabled = false; btn.innerHTML = 'Publikasikan';
+                return;
+            }
 
             const newId = 'p' + Math.random().toString(36).substr(2, 8);
             const today = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -495,12 +491,15 @@
             let deleteBtnHTML = '';
             
             if (currentUser && currentUser.id === paste.user_id) {
-                deleteBtnHTML = `<button id="btn-delete" onclick="deletePaste('${paste.id}')" class="text-sm bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 hover:text-red-700 px-4 py-2 rounded-full font-bold transition-colors shadow-sm">Hapus</button>`;
+                deleteBtnHTML = `<button id="btn-delete" onclick="deletePaste('${paste.id}')" class="text-xs md:text-sm bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 px-3 py-1.5 md:px-4 md:py-2 rounded-full font-bold transition-colors shadow-sm">Hapus</button>`;
             }
             
             actionsDiv.innerHTML = `
                 ${deleteBtnHTML}
-                <button onclick="copyCurrentLink()" class="text-sm bg-brand-900 text-white hover:bg-black px-4 py-2 rounded-full font-bold transition-colors shadow-sm">Salin Link</button>
+                <button onclick="copyCurrentLink()" class="text-xs md:text-sm bg-brand-900 text-white hover:bg-black px-3 py-1.5 md:px-4 md:py-2 rounded-full font-bold transition-colors shadow-sm flex items-center gap-1">
+                   <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                   Salin Link
+                </button>
             `;
 
             navigate('read', false);
@@ -511,7 +510,7 @@
             if (!confirmDelete) return;
             
             const btn = document.getElementById('btn-delete');
-            if(btn) btn.innerHTML = 'Hapus...';
+            if(btn) btn.innerHTML = '...';
 
             try {
                 const { error } = await supabaseClient.from('pastes').delete().eq('id', id);
@@ -522,7 +521,7 @@
                 showToast("Tulisan berhasil dihapus!");
                 navigate('home');
             } catch (error) {
-                alert("Gagal menghapus tulisan. Pastikan internet lancar.");
+                alert("Gagal menghapus tulisan.");
                 if(btn) btn.innerHTML = 'Hapus';
             }
         }
