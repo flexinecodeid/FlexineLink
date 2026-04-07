@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlexineLink</title>
+    <title>FlexineLink | Publikasi Profesional</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,172 +21,129 @@
                         heading: ['Poppins', 'sans-serif'],
                     },
                     colors: {
-                        brand: {
-                            50: '#f6f6f6',
-                            900: '#111111',
-                        }
+                        brand: { 50: '#f6f6f6', 900: '#111111' }
                     }
                 }
             }
         }
     </script>
     
-    <!-- GSAP untuk Animasi -->
+    <!-- GSAP & Supabase & DOMPurify -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
-    <!-- Supabase SDK (MANDATORY FOR GITHUB PAGES) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 
     <style>
-        /* Scrollbar Profesional */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f9fafb; }
         ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
         
-        /* Manajemen Tampilan */
         .view-section { display: none; opacity: 0; }
         .view-section.active { display: block; }
 
-        /* Styling Khusus Editor & Output Baca (Prose) */
         .editor-content:empty:before { content: attr(data-placeholder); color: #9ca3af; pointer-events: none; display: block; }
-        .prose-content { color: #374151; line-height: 1.8; }
+        .prose-content { color: #374151; line-height: 1.8; word-wrap: break-word; }
         .prose-content h1 { font-family: 'Poppins', sans-serif; font-size: 2.25rem; font-weight: 700; margin: 2rem 0 1rem; color: #111; }
         .prose-content h2 { font-family: 'Poppins', sans-serif; font-size: 1.75rem; font-weight: 600; margin: 1.5rem 0 0.75rem; color: #111; }
         .prose-content p { margin-bottom: 1rem; }
         .prose-content b, .prose-content strong { font-weight: 700; color: #111; }
         .prose-content i, .prose-content em { font-style: italic; }
-        .prose-content u { text-decoration: underline; }
-        .prose-content a.text-link { color: #2563eb; text-decoration: underline; text-underline-offset: 4px; font-weight: 600; }
-        .prose-content a.text-link:hover { color: #1d4ed8; }
-        .prose-content blockquote { border-left: 4px solid #e5e7eb; padding-left: 1.25rem; font-style: italic; color: #6b7280; margin: 1.5rem 0; background: #f9fafb; padding-top: 0.5rem; padding-bottom: 0.5rem;}
+        .prose-content u { text-decoration: underline; text-underline-offset: 3px; }
         
-        /* Styling Khusus Tombol Buatan Editor */
+        .prose-content a.text-link { color: #2563eb; text-decoration: none; font-weight: 600; border-bottom: 2px solid #93c5fd; transition: all 0.2s; }
+        .prose-content a.text-link:hover { color: #1d4ed8; border-bottom-color: #2563eb; background-color: #eff6ff; }
+        .prose-content blockquote { border-left: 4px solid #ef4444; padding-left: 1.25rem; color: #b91c1c; margin: 1.5rem 0; background: #fef2f2; padding-top: 1rem; padding-bottom: 1rem; border-radius: 0 0.5rem 0.5rem 0; font-weight: 500;}
+        
         .prose-content a.custom-btn {
             display: inline-block; background-color: #111111; color: #ffffff; padding: 0.6rem 1.5rem;
             border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-family: 'Poppins', sans-serif;
-            margin: 0.5rem 0; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); user-select: none; cursor: pointer;
+            margin: 0.5rem 0; transition: all 0.2s; text-align: center;
         }
-        .prose-content a.custom-btn:hover { background-color: #333333; transform: translateY(-2px); box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.15); }
-
+        .prose-content a.custom-btn:hover { background-color: #3b82f6; transform: translateY(-2px); }
         .toolbar-btn { transition: all 0.2s; cursor: pointer; }
         .toolbar-btn:hover { background-color: #e5e7eb; }
-        
         #loading-screen { display: flex; }
     </style>
 </head>
-<body class="bg-white text-gray-800 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-900 selection:text-white relative">
+<body class="bg-white text-gray-800 font-sans antialiased min-h-screen flex flex-col relative">
 
-    <!-- Loading Screen -->
     <div id="loading-screen" class="fixed inset-0 bg-white z-50 flex items-center justify-center flex-col gap-4 transition-opacity duration-500">
         <div class="w-12 h-12 border-4 border-gray-200 border-t-brand-900 rounded-full animate-spin"></div>
-        <p class="text-gray-500 font-medium animate-pulse">Menghubungkan ke Database...</p>
+        <p class="text-gray-500 font-medium animate-pulse">Menghubungkan ke Flexine...</p>
     </div>
 
-    <!-- Navbar -->
+    <!-- Navbar Dinamis -->
     <nav class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-100">
         <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-            <button onclick="navigate('home')" class="font-heading text-2xl font-bold tracking-tight text-brand-900 flex items-center gap-2 group">
+            <button onclick="navigate('home')" class="font-heading text-2xl font-bold text-brand-900 flex items-center gap-2 group">
                 <div class="w-8 h-8 bg-brand-900 text-white rounded-lg flex items-center justify-center text-lg transition-transform group-hover:-rotate-6">P</div>
                 Flexinelink
             </button>
-            <button onclick="navigate('create')" class="bg-brand-900 hover:bg-black text-white px-6 py-2.5 rounded-full font-medium transition-all shadow-sm hover:shadow-md flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                <span class="hidden sm:inline">Tulis Baru</span>
-            </button>
+            
+            <!-- Tempat Tombol Navbar -->
+            <div id="nav-actions" class="flex items-center gap-4">
+                <!-- Diisi oleh JavaScript tergantung status Login -->
+            </div>
         </div>
     </nav>
 
-    <!-- Area Konten Utama -->
     <main class="flex-grow w-full relative">
-        
         <!-- ================= VIEW: BERANDA ================= -->
         <section id="view-home" class="view-section w-full py-12">
             <div class="max-w-6xl mx-auto px-6">
-                <div class="text-center max-w-3xl mx-auto mb-16 pt-8" id="hero-content">
-                    <h1 class="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-brand-900 mb-6 leading-tight">
+                <div class="text-center max-w-3xl mx-auto mb-16 pt-8">
+                    <h1 class="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-brand-900 mb-6">
                         Publikasi Ide Anda <br> <span class="text-gray-400">Secara Profesional.</span>
                     </h1>
-                    <p class="text-lg text-gray-500 mb-8 font-medium">
-                        Buat catatan, artikel, atau tautan penting dengan editor kaya fitur. Kunci dengan sandi untuk privasi ekstra.
-                    </p>
+                    <p class="text-lg text-gray-500 mb-8 font-medium">Buat catatan atau tautan rahasia dengan editor kaya fitur.</p>
                 </div>
-
                 <div class="flex items-center justify-between mb-8 border-b border-gray-100 pb-4">
                     <h2 class="font-heading text-2xl font-bold text-gray-900">Jelajahi Tulisan Publik</h2>
                 </div>
-                
-                <div id="paste-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-12">
-                    <!-- Item Card di-render oleh JS -->
-                </div>
+                <div id="paste-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-12"></div>
             </div>
         </section>
 
-        <!-- ================= VIEW: EDITOR (BUAT PASTE) ================= -->
+        <!-- ================= VIEW: EDITOR (Hanya yang Login) ================= -->
         <section id="view-create" class="view-section w-full py-12">
             <div class="max-w-4xl mx-auto px-6">
                 <div class="bg-white border border-gray-200 rounded-3xl p-6 md:p-10 shadow-sm">
-                    <div class="flex items-center justify-between mb-8">
-                        <h2 class="font-heading text-3xl font-bold text-brand-900">Tulis Sesuatu</h2>
-                    </div>
-                    
+                    <h2 class="font-heading text-3xl font-bold text-brand-900 mb-8">Tulis Sesuatu</h2>
                     <form id="form-create" onsubmit="handleCreatePaste(event)">
-                        <!-- Input Judul -->
-                        <div class="mb-6">
-                            <input type="text" id="input-title" required placeholder="Judul Tulisan..." 
-                                class="w-full text-3xl md:text-4xl font-heading font-bold text-gray-900 placeholder-gray-300 bg-transparent border-none outline-none focus:ring-0 px-0">
-                        </div>
+                        <input type="text" id="input-title" required placeholder="Judul Tulisan..." 
+                            class="w-full text-3xl md:text-4xl font-heading font-bold text-gray-900 placeholder-gray-300 bg-transparent border-none outline-none mb-6">
                         
-                        <!-- Input Meta -->
                         <div class="mb-8 flex flex-col md:flex-row gap-6 bg-gray-50 p-4 rounded-xl border border-gray-100">
                             <div class="flex-1">
-                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Penulis</label>
-                                <input type="text" id="input-author" placeholder="Anonim" 
-                                    class="w-full text-gray-800 bg-transparent border-b border-gray-300 focus:border-brand-900 outline-none py-1 transition-colors">
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Penulis (Otomatis)</label>
+                                <input type="text" id="input-author" readonly class="w-full text-brand-900 font-bold bg-transparent border-b border-gray-300 py-1 cursor-not-allowed">
                             </div>
-                            <div class="flex-1 relative">
-                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 flex items-center gap-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                                    Kata Sandi (Opsional)
-                                </label>
-                                <input type="password" id="input-password" placeholder="Kosongkan jika publik" 
-                                    class="w-full text-gray-800 bg-transparent border-b border-gray-300 focus:border-brand-900 outline-none py-1 transition-colors">
+                            <div class="flex-1">
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Kata Sandi (Opsional)</label>
+                                <input type="password" id="input-password" placeholder="Kosongkan jika publik" class="w-full text-gray-800 bg-transparent border-b border-gray-300 focus:border-brand-900 outline-none py-1">
                             </div>
                         </div>
 
-                        <!-- RICH TEXT EDITOR -->
-                        <div class="mb-8 border border-gray-200 rounded-2xl overflow-hidden focus-within:border-brand-900 focus-within:ring-1 focus-within:ring-brand-900 transition-all">
-                            <!-- Toolbar -->
-                            <div class="bg-gray-50 border-b border-gray-200 p-2 flex flex-wrap gap-1 items-center">
-                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('bold')" class="toolbar-btn w-8 h-8 flex items-center justify-center rounded text-gray-700 font-bold" title="Tebal">B</button>
-                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('italic')" class="toolbar-btn w-8 h-8 flex items-center justify-center rounded text-gray-700 italic font-serif" title="Miring">I</button>
-                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('underline')" class="toolbar-btn w-8 h-8 flex items-center justify-center rounded text-gray-700 underline" title="Garis Bawah">U</button>
+                        <div class="mb-8 border border-gray-200 rounded-2xl overflow-hidden shadow-inner">
+                            <div class="bg-gray-50 border-b border-gray-200 p-2 flex flex-wrap gap-1 items-center sticky top-0 z-10">
+                                <button type="button" onclick="formatDoc('bold')" class="toolbar-btn w-8 h-8 font-bold">B</button>
+                                <button type="button" onclick="formatDoc('italic')" class="toolbar-btn w-8 h-8 italic font-serif">I</button>
+                                <button type="button" onclick="formatDoc('underline')" class="toolbar-btn w-8 h-8 underline">U</button>
                                 <div class="w-px h-5 bg-gray-300 mx-1"></div>
-                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('formatBlock', 'H1')" class="toolbar-btn px-2 h-8 flex items-center justify-center rounded text-gray-700 font-bold font-heading text-sm" title="Judul Besar">H1</button>
-                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('formatBlock', 'H2')" class="toolbar-btn px-2 h-8 flex items-center justify-center rounded text-gray-700 font-bold font-heading text-sm" title="Sub Judul">H2</button>
-                                <button type="button" onmousedown="event.preventDefault();" onclick="formatDoc('formatBlock', 'BLOCKQUOTE')" class="toolbar-btn w-8 h-8 flex items-center justify-center rounded text-gray-700 font-serif font-bold text-lg" title="Kutipan">"</button>
+                                <button type="button" onclick="formatDoc('formatBlock', 'H1')" class="toolbar-btn px-2 h-8 font-bold text-sm">H1</button>
+                                <button type="button" onclick="formatDoc('formatBlock', 'H2')" class="toolbar-btn px-2 h-8 font-bold text-sm">H2</button>
+                                <button type="button" onclick="formatDoc('formatBlock', 'BLOCKQUOTE')" class="toolbar-btn w-8 h-8 text-red-600 font-bold text-lg" title="Kotak Warning Merah">!</button>
                                 <div class="w-px h-5 bg-gray-300 mx-1"></div>
-                                <button type="button" onmousedown="event.preventDefault();" onclick="openInsertModal('link')" class="toolbar-btn px-2 h-8 flex items-center gap-1 justify-center rounded text-gray-700 text-sm font-medium" title="Ubah Teks Jadi Link">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg> Link
-                                </button>
-                                <button type="button" onmousedown="event.preventDefault();" onclick="openInsertModal('button')" class="toolbar-btn px-2 h-8 flex items-center gap-1 justify-center rounded text-brand-900 bg-gray-200 hover:bg-gray-300 text-sm font-bold ml-1" title="Ubah Teks Jadi Tombol">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg> + Tombol
-                                </button>
+                                <button type="button" onclick="openInsertModal('link')" class="toolbar-btn px-2 h-8 text-blue-600 text-sm font-bold bg-blue-50">+ Link</button>
+                                <button type="button" onclick="openInsertModal('button')" class="toolbar-btn px-2 h-8 text-white bg-brand-900 text-sm font-bold">+ Tombol</button>
                             </div>
-                            <!-- Editor Area -->
-                            <div id="editor-content" contenteditable="true" 
-                                class="w-full min-h-[400px] p-6 outline-none bg-white editor-content prose-content" 
-                                data-placeholder="Mulai mengetik ceritamu di sini... Blok teks untuk memodifikasinya menggunakan toolbar."></div>
+                            <div id="editor-content" contenteditable="true" class="w-full min-h-[400px] p-6 outline-none bg-white editor-content prose-content" data-placeholder="Ketik rahasiamu di sini..."></div>
                         </div>
                         
-                        <div class="flex justify-end gap-3 border-t border-gray-100 pt-6">
-                            <button type="button" onclick="navigate('home')" class="px-6 py-3 text-gray-500 hover:text-gray-900 font-medium transition-colors rounded-full hover:bg-gray-50">
-                                Batal
-                            </button>
-                            <button type="submit" id="btn-publish" class="bg-brand-900 hover:bg-black text-white px-8 py-3 rounded-full font-medium transition-all shadow-sm flex items-center gap-2">
-                                Publikasikan
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                            </button>
+                        <div class="flex justify-end gap-3 pt-6">
+                            <button type="button" onclick="navigate('home')" class="px-6 py-3 text-gray-500 hover:bg-gray-50 rounded-full font-medium">Batal</button>
+                            <button type="submit" id="btn-publish" class="bg-brand-900 text-white px-8 py-3 rounded-full font-medium hover:bg-black">Publikasikan</button>
                         </div>
                     </form>
                 </div>
@@ -196,177 +153,189 @@
         <!-- ================= VIEW: BACA TULISAN ================= -->
         <section id="view-read" class="view-section w-full py-12">
             <div class="max-w-3xl mx-auto px-6">
-                <!-- Toolbar Atas -->
                 <div class="flex items-center justify-between mb-10 pb-4 border-b border-gray-100">
-                    <button onclick="navigate('home')" class="text-gray-500 hover:text-brand-900 flex items-center gap-2 transition-colors font-medium">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                        <span class="hidden sm:inline">Kembali ke Beranda</span>
-                    </button>
-                    
-                    <button onclick="copyCurrentLink()" class="flex items-center gap-2 text-sm bg-gray-50 border border-gray-200 hover:bg-gray-100 text-brand-900 px-4 py-2 rounded-full transition-colors font-medium">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                        Bagikan Link
-                    </button>
+                    <button onclick="navigate('home')" class="text-gray-500 font-medium hover:text-brand-900">← Kembali</button>
+                    <button onclick="copyCurrentLink()" class="text-sm bg-gray-50 border border-gray-200 text-brand-900 px-4 py-2 rounded-full font-medium">Salin Link</button>
                 </div>
-
-                <!-- Konten Tulisan -->
                 <article class="bg-white">
                     <header class="mb-10">
-                        <h1 id="read-title" class="font-heading text-4xl md:text-5xl font-bold text-brand-900 mb-6 leading-tight break-words">Memuat Judul...</h1>
+                        <h1 id="read-title" class="font-heading text-4xl md:text-5xl font-bold text-brand-900 mb-6">Memuat...</h1>
                         <div class="flex items-center gap-3 text-gray-500 text-sm bg-gray-50 inline-flex px-4 py-2 rounded-full border border-gray-100">
-                            <div class="flex items-center gap-2">
-                                <div class="w-6 h-6 rounded-full bg-brand-900 flex items-center justify-center text-white text-xs font-heading font-bold" id="read-avatar">?</div>
-                                <span id="read-author" class="font-medium text-gray-700">Loading</span>
-                            </div>
-                            <span class="text-gray-300">|</span>
-                            <span id="read-date">...</span>
-                            <span class="text-gray-300">|</span>
-                            <span id="read-id" class="font-mono text-xs text-gray-400">...</span>
+                            <span id="read-author" class="font-medium text-gray-700">Loading</span>
+                            <span class="text-gray-300">|</span> <span id="read-date">...</span>
                         </div>
                     </header>
-                    
-                    <div id="read-content" class="prose-content text-lg break-words pb-20">
-                        <div class="animate-pulse flex flex-col gap-4">
-                            <div class="h-4 bg-gray-200 rounded w-full"></div>
-                            <div class="h-4 bg-gray-200 rounded w-5/6"></div>
-                            <div class="h-4 bg-gray-200 rounded w-4/6"></div>
-                        </div>
-                    </div>
+                    <div id="read-content" class="prose-content text-lg break-words pb-20"></div>
                 </article>
             </div>
         </section>
-
     </main>
 
-    <!-- Modal Form Sisip Tautan/Tombol Kustom -->
+    <!-- Modal Login -->
+    <div id="login-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="login-card" class="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300 text-center">
+            <div class="w-16 h-16 bg-brand-900 rounded-2xl flex items-center justify-center mb-6 mx-auto text-white text-3xl font-bold font-heading">P</div>
+            <h3 class="font-heading text-2xl font-bold text-brand-900 mb-2">Masuk ke Flexine</h3>
+            <p class="text-gray-500 text-sm mb-8">Login diperlukan untuk membuat dan mempublikasikan tulisan.</p>
+            
+            <button onclick="loginWithGoogle()" class="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 text-gray-700 font-medium py-3 rounded-xl hover:bg-gray-50 transition-colors mb-4 shadow-sm">
+                <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                Lanjutkan dengan Google
+            </button>
+            <button onclick="closeLoginModal()" class="text-sm text-gray-500 hover:text-brand-900 font-medium">Batal</button>
+        </div>
+    </div>
+
+    <!-- Modal Sandi & Insert Tool (Sama spt sebelumnya) -->
     <div id="insert-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
         <div id="insert-card" class="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
             <h3 id="insert-modal-title" class="font-heading text-xl font-bold text-brand-900 mb-4">Tambahkan Tautan</h3>
-            
-            <div class="mb-4">
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">URL / Link Asli</label>
-                <input type="url" id="custom-url" placeholder="https://example.com" value="https://" 
-                    class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-brand-900 focus:ring-1 focus:ring-brand-900 text-sm">
-            </div>
-            
-            <div class="mb-6">
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Teks Tampilan (Opsional)</label>
-                <input type="text" id="custom-text" placeholder="Contoh: KLIK DISINI" 
-                    class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-brand-900 focus:ring-1 focus:ring-brand-900 text-sm">
-            </div>
-
+            <input type="url" id="custom-url" placeholder="https://" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mb-4">
+            <input type="text" id="custom-text" placeholder="Teks Tampilan" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mb-6">
             <input type="hidden" id="custom-type" value="link">
-            
             <div class="flex gap-2">
-                <button type="button" onclick="closeInsertModal()" class="flex-1 py-2.5 bg-white border border-gray-200 text-gray-600 rounded-lg font-medium hover:bg-gray-50 transition-colors text-sm">Batal</button>
-                <button type="button" onclick="applyCustomInsert()" class="flex-1 py-2.5 bg-brand-900 text-white rounded-lg font-medium hover:bg-black transition-colors text-sm">Sisipkan</button>
+                <button onclick="closeInsertModal()" class="flex-1 py-2 bg-gray-100 rounded-lg">Batal</button>
+                <button onclick="applyCustomInsert()" class="flex-1 py-2 bg-brand-900 text-white rounded-lg">Sisipkan</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Password -->
     <div id="password-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-        <div id="password-card" class="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
-            <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-6 mx-auto border border-gray-100">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-            </div>
-            <h3 class="font-heading text-2xl font-bold text-center text-brand-900 mb-2">Tulisan Terkunci</h3>
-            <p class="text-center text-gray-500 text-sm mb-6">Masukkan sandi untuk membaca konten ini.</p>
-            
+        <div id="password-card" class="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl transform scale-95 text-center">
+            <h3 class="font-heading text-2xl font-bold text-brand-900 mb-2">Akses Terkunci</h3>
             <form onsubmit="verifyPassword(event)">
-                <input type="password" id="verify-password-input" required placeholder="Kata sandi..." autocomplete="off"
-                    class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mb-4 focus:outline-none focus:border-brand-900 focus:ring-1 focus:ring-brand-900 text-center text-lg">
-                <p id="password-error" class="text-red-500 text-xs text-center mb-4 hidden">Kata sandi salah!</p>
-                
+                <input type="password" id="verify-password-input" required class="w-full bg-gray-50 border rounded-xl px-4 py-3 mb-4 text-center">
+                <p id="password-error" class="text-red-500 text-xs mb-4 hidden">Sandi salah!</p>
                 <div class="flex gap-2">
-                    <button type="button" onclick="cancelPassword()" class="flex-1 py-3 bg-white border border-gray-200 text-gray-600 rounded-xl font-medium hover:bg-gray-50 transition-colors">Batal</button>
-                    <button type="submit" class="flex-1 py-3 bg-brand-900 text-white rounded-xl font-medium hover:bg-black transition-colors">Buka</button>
+                    <button type="button" onclick="cancelPassword()" class="flex-1 py-3 bg-gray-100 rounded-xl">Batal</button>
+                    <button type="submit" class="flex-1 py-3 bg-brand-900 text-white rounded-xl">Buka</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Notifikasi Toast -->
-    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full shadow-xl text-sm font-medium opacity-0 pointer-events-none z-50">
-        Tautan berhasil disalin!
-    </div>
+    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full shadow-xl text-sm font-medium opacity-0 pointer-events-none z-50">Tautan berhasil disalin!</div>
 
-    <!-- ==============================================
-         LOGIKA APLIKASI & SUPABASE INTEGRATION
-         ============================================== -->
     <script>
         // ==========================================
-        // 1. KONFIGURASI SUPABASE (GANTI DI GITHUB PAGES)
+        // 1. KONFIGURASI SUPABASE (GANTI URL & KEY)
         // ==========================================
-        const SUPABASE_URL = 'https://tixewjhttuhzkhbegwwv.supabase.co'; // Ganti dengan Project URL Anda
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpeGV3amh0dHVoemtoYmVnd3d2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MjEyOTIsImV4cCI6MjA5MDE5NzI5Mn0.0Hs7yH3ppbzNyp4LUJknyBX7DcDkO6MWqj57NhT_trg'; // Ganti dengan anon/public key Anda
+        const SUPABASE_URL = 'https://tixewjhttuhzkhbegwwv.supabase.co'; 
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpeGV3amh0dHVoemtoYmVnd3d2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MjEyOTIsImV4cCI6MjA5MDE5NzI5Mn0.0Hs7yH3ppbzNyp4LUJknyBX7DcDkO6MWqj57NhT_trg';
 
-        // Mengecek apakah user sudah memasukkan key asli atau belum
-        const isSupabaseConfigured = SUPABASE_URL !== 'YOUR_SUPABASE_URL';
-        let supabaseClient = null;
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        if (isSupabaseConfigured) {
-            // Inisialisasi Supabase (dari CDN)
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        }
-
-        // ==========================================
-        // 2. STATE DATA
-        // ==========================================
         let pastes = [];
         let currentView = '';
-        let currentReadId = null;
-        let attemptReadId = null;
-
-        // Data Mockup Jika Belum Config Supabase (Agar UI tetap jalan saat diuji)
-        const mockPastes = [
-            { id: 'p123', title: 'Contoh Dokumen Supabase', author: 'Sistem', password: '', content: '<p>Ini adalah contoh dokumen. Silakan ganti <b>SUPABASE_URL</b> di source code untuk menghubungkannya ke database asli.</p>', date: 'Hari ini', timestamp: Date.now() }
-        ];
+        let currentUser = null; // Menyimpan data user yang login
 
         document.addEventListener('DOMContentLoaded', () => {
-            initAppLogic();
-        });
-
-        async function initAppLogic() {
-            // Mencegah paste bawaan merusak editor
+            initAuth();
+            
+            // Fix Editor Paste Format
             document.getElementById('editor-content').addEventListener('paste', function(e) {
                 e.preventDefault();
                 let text = (e.originalEvent || e).clipboardData.getData('text/plain');
                 document.execCommand('insertText', false, text);
             });
+        });
+
+        // ==========================================
+        // SISTEM AUTHENTICATION (LOGIN GOOGLE)
+        // ==========================================
+        async function initAuth() {
+            // Cek sesi saat web pertama dibuka
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            currentUser = session?.user || null;
+            updateNavbarUI();
+
+            // Dengarkan perubahan status (Login/Logout)
+            supabaseClient.auth.onAuthStateChange((event, session) => {
+                currentUser = session?.user || null;
+                updateNavbarUI();
+            });
 
             await fetchPastes();
         }
 
-        async function fetchPastes() {
-            if (isSupabaseConfigured) {
-                try {
-                    // Ambil data dari tabel 'pastes'
-                    const { data, error } = await supabaseClient
-                        .from('pastes')
-                        .select('*')
-                        .order('timestamp', { ascending: false });
+        async function loginWithGoogle() {
+            const redirectUrl = window.location.origin + window.location.pathname; // Kembali ke web ini
+            const { error } = await supabaseClient.auth.signInWithOAuth({
+                provider: 'google',
+                options: { redirectTo: redirectUrl }
+            });
+            if(error) alert("Gagal terhubung ke Google.");
+        }
 
-                    if (error) throw error;
-                    pastes = data || [];
-                } catch (error) {
-                    console.error("Gagal mengambil data dari Supabase:", error.message);
-                    pastes = [];
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            navigate('home');
+        }
+
+        function updateNavbarUI() {
+            const navContainer = document.getElementById('nav-actions');
+            
+            if (currentUser) {
+                // UI JIKA LOGIN
+                const userName = currentUser.user_metadata.full_name || 'User';
+                const avatar = currentUser.user_metadata.avatar_url || '';
+                
+                navContainer.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <div class="hidden sm:flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200">
+                            <img src="${avatar}" class="w-6 h-6 rounded-full" onerror="this.style.display='none'">
+                            <span class="text-sm font-bold text-gray-700">${userName.split(' ')[0]}</span>
+                        </div>
+                        <button onclick="logout()" class="text-sm text-red-500 font-bold hover:text-red-700">Keluar</button>
+                        <button onclick="navigate('create')" class="bg-brand-900 hover:bg-black text-white px-5 py-2 rounded-full font-medium transition-all shadow-sm">Tulis Baru</button>
+                    </div>
+                `;
+                
+                // Set nama di editor otomatis
+                if(document.getElementById('input-author')) {
+                    document.getElementById('input-author').value = userName;
                 }
             } else {
-                // Fallback jika belum pasang API Key Supabase
-                pastes = [...mockPastes];
-                console.warn("Menjalankan mode MOCK. Silakan masukkan kunci Supabase Anda.");
+                // UI JIKA BELUM LOGIN
+                navContainer.innerHTML = `
+                    <button onclick="openLoginModal()" class="bg-brand-900 hover:bg-black text-white px-6 py-2 rounded-full font-medium transition-all shadow-sm flex items-center gap-2">
+                        <svg viewBox="0 0 24 24" width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#fff"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#fff"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#fff"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#fff"/></svg>
+                        Login Google
+                    </button>
+                `;
             }
+        }
 
-            renderHomeGrid();
-            handleUrlRouting();
+        function openLoginModal() {
+            const modal = document.getElementById('login-modal');
+            const card = document.getElementById('login-card');
+            modal.classList.remove('pointer-events-none');
+            gsap.to(modal, { opacity: 1, duration: 0.2 });
+            gsap.to(card, { scale: 1, duration: 0.3, ease: "back.out(1.5)" });
+        }
+
+        function closeLoginModal() {
+            const modal = document.getElementById('login-modal');
+            const card = document.getElementById('login-card');
+            gsap.to(card, { scale: 0.95, duration: 0.2 });
+            gsap.to(modal, { opacity: 0, duration: 0.2, onComplete: () => modal.classList.add('pointer-events-none') });
         }
 
 
         // ==========================================
-        // 3. ROUTING (GITHUB PAGES URL HANDLING)
+        // DATABASE & ROUTING
         // ==========================================
+        async function fetchPastes() {
+            try {
+                const { data, error } = await supabaseClient.from('pastes').select('*').order('timestamp', { ascending: false });
+                if (error) throw error;
+                pastes = data || [];
+            } catch (error) { console.error("Error db:", error.message); }
+            
+            renderHomeGrid();
+            handleUrlRouting();
+        }
+
         function handleUrlRouting() {
             const urlParams = new URLSearchParams(window.location.search);
             const idToRead = urlParams.get('id');
@@ -374,153 +343,20 @@
             const loadingScreen = document.getElementById('loading-screen');
             gsap.to(loadingScreen, { opacity: 0, duration: 0.5, onComplete: () => {
                 loadingScreen.style.display = 'none';
-                
-                if (idToRead) {
-                    attemptLoadPaste(idToRead);
-                } else {
-                    navigate('home');
-                }
+                if (idToRead) attemptLoadPaste(idToRead);
+                else navigate('home');
             }});
-        }
-
-        function updateUrlParameter(id) {
-            const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + (id ? `?id=${id}` : '');
-            window.history.pushState({path:newurl}, '', newurl);
-        }
-
-        window.addEventListener('popstate', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const id = urlParams.get('id');
-            if (id) {
-                attemptLoadPaste(id);
-            } else {
-                navigate('home', false);
-            }
-        });
-
-
-        // ==========================================
-        // 4. SISTEM EDITOR (WYSIWYG & POP-UP)
-        // ==========================================
-        function formatDoc(cmd, value = null) {
-            document.execCommand(cmd, false, value);
-            document.getElementById('editor-content').focus();
-        }
-
-        let savedSelectionRange = null;
-        function saveSelection() {
-            if (window.getSelection && window.getSelection().rangeCount > 0) {
-                savedSelectionRange = window.getSelection().getRangeAt(0);
-            }
-        }
-        function restoreSelection() {
-            if (savedSelectionRange) {
-                const sel = window.getSelection();
-                sel.removeAllRanges();
-                sel.addRange(savedSelectionRange);
-            }
-        }
-
-        function openInsertModal(type) {
-            saveSelection();
-            const selText = window.getSelection().toString().trim();
-            const modal = document.getElementById('insert-modal');
-            const card = document.getElementById('insert-card');
-            
-            document.getElementById('insert-modal-title').textContent = type === 'button' ? 'Buat Tombol' : 'Sisipkan Tautan';
-            document.getElementById('custom-type').value = type;
-            document.getElementById('custom-url').value = 'https://';
-            document.getElementById('custom-text').value = selText;
-            
-            modal.classList.remove('pointer-events-none');
-            gsap.to(modal, { opacity: 1, duration: 0.2 });
-            gsap.to(card, { scale: 1, duration: 0.3, ease: "back.out(1.5)" });
-        }
-
-        function closeInsertModal() {
-            const modal = document.getElementById('insert-modal');
-            const card = document.getElementById('insert-card');
-            gsap.to(card, { scale: 0.95, duration: 0.2 });
-            gsap.to(modal, { opacity: 0, duration: 0.2, onComplete: () => {
-                modal.classList.add('pointer-events-none');
-            }});
-        }
-
-        function applyCustomInsert() {
-            const urlInput = document.getElementById('custom-url').value.trim();
-            const textInput = document.getElementById('custom-text').value.trim();
-            const type = document.getElementById('custom-type').value;
-
-            if (!urlInput || urlInput === 'https://') return alert("URL tidak valid.");
-
-            const displayText = textInput !== "" ? textInput : urlInput;
-            closeInsertModal();
-            document.getElementById('editor-content').focus();
-            restoreSelection();
-
-            const className = type === 'button' ? 'custom-btn' : 'text-link';
-            const htmlToInsert = `<a href="${urlInput}" target="_blank" class="${className}">${displayText}</a>&nbsp;`;
-            document.execCommand('insertHTML', false, htmlToInsert);
-        }
-
-        // ==========================================
-        // 5. NAVIGASI & RENDER BERANDA
-        // ==========================================
-        function renderHomeGrid() {
-            const grid = document.getElementById('paste-grid');
-            grid.innerHTML = '';
-            
-            if (pastes.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400">Belum ada tulisan yang dipublikasikan.</div>`;
-                return;
-            }
-
-            pastes.forEach((paste) => {
-                const tempDiv = document.createElement("div");
-                tempDiv.innerHTML = paste.content;
-                const textContent = tempDiv.textContent || tempDiv.innerText || "";
-                const excerpt = textContent.length > 100 ? textContent.substring(0, 100) + '...' : textContent;
-
-                const isLocked = paste.password && paste.password.length > 0;
-                const lockIcon = isLocked ? `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-brand-900"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>` : '';
-
-                const card = document.createElement('div');
-                card.className = 'bg-white border border-gray-200 p-6 flex flex-col h-full hover:shadow-xl hover:border-gray-300 transition-all duration-300 group cursor-pointer rounded-2xl relative overflow-hidden';
-                
-                card.innerHTML = `
-                    <div class="flex-grow">
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-xs font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1">
-                                ${lockIcon} #${paste.id.substring(0,5)}
-                            </span>
-                            <span class="text-xs text-gray-400 font-medium">${paste.date}</span>
-                        </div>
-                        <h3 class="font-heading text-xl font-bold text-brand-900 mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">${paste.title}</h3>
-                        <p class="text-gray-500 text-sm leading-relaxed line-clamp-3">${isLocked ? '<i class="text-gray-400">Konten dilindungi kata sandi.</i>' : excerpt}</p>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <div class="w-6 h-6 rounded-full bg-brand-900 flex items-center justify-center text-[10px] font-heading font-bold text-white uppercase">
-                                ${paste.author.charAt(0)}
-                            </div>
-                            <span class="text-sm font-medium text-gray-700">${paste.author}</span>
-                        </div>
-                    </div>
-                `;
-                
-                card.onclick = () => attemptLoadPaste(paste.id);
-                grid.appendChild(card);
-            });
-
-            gsap.fromTo(grid.children, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.05 });
         }
 
         function navigate(viewName, updateUrl = true) {
-            if (currentView === viewName) return;
-            
-            if (updateUrl) {
-                if (viewName === 'home') updateUrlParameter(null);
+            // PROTEKSI HALAMAN TULIS
+            if (viewName === 'create' && !currentUser) {
+                openLoginModal();
+                return;
             }
+
+            if (currentView === viewName) return;
+            if (updateUrl && viewName === 'home') window.history.pushState({}, '', window.location.pathname);
 
             const oldView = currentView ? document.getElementById(`view-${currentView}`) : null;
             const newView = document.getElementById(`view-${viewName}`);
@@ -528,14 +364,11 @@
             const showNewView = () => {
                 window.scrollTo(0, 0);
                 newView.classList.add('active');
-                
                 if (viewName === 'home') {
                     renderHomeGrid();
-                    document.getElementById('form-create').reset();
+                    if(document.getElementById('form-create')) document.getElementById('form-create').reset();
                     document.getElementById('editor-content').innerHTML = '';
-                    currentReadId = null;
                 }
-
                 gsap.fromTo(newView, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3 });
                 currentView = viewName;
             };
@@ -545,174 +378,139 @@
                     oldView.classList.remove('active');
                     showNewView();
                 }});
-            } else {
-                showNewView();
-            }
+            } else showNewView();
         }
 
         // ==========================================
-        // 6. SIMPAN KE SUPABASE & PASSWORD
+        // RENDER GRID HOME
+        // ==========================================
+        function renderHomeGrid() {
+            const grid = document.getElementById('paste-grid');
+            grid.innerHTML = '';
+            
+            if (pastes.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400">Belum ada tulisan. Jadilah yang pertama!</div>`;
+                return;
+            }
+
+            pastes.forEach((paste) => {
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = DOMPurify.sanitize(paste.content);
+                const textContent = tempDiv.textContent || "";
+                const excerpt = textContent.length > 100 ? textContent.substring(0, 100) + '...' : textContent;
+
+                const isLocked = paste.password && paste.password.length > 0;
+                const lockIcon = isLocked ? `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" class="text-red-500"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>` : '';
+                
+                // Label khusus jika tulisan ini milik user yang sedang login
+                const myPostBadge = (currentUser && paste.user_id === currentUser.id) ? `<span class="absolute top-4 right-4 bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase">Tulisan Saya</span>` : '';
+
+                const card = document.createElement('div');
+                card.className = 'bg-white border border-gray-200 p-6 flex flex-col h-full hover:shadow-xl hover:border-brand-900 transition-all duration-300 cursor-pointer rounded-2xl relative overflow-hidden group';
+                
+                card.innerHTML = `
+                    ${myPostBadge}
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-xs font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1">${lockIcon} #${paste.id.substring(0,5)}</span>
+                            <span class="text-xs text-gray-400 font-medium">${paste.date}</span>
+                        </div>
+                        <h3 class="font-heading text-xl font-bold text-brand-900 mb-3 group-hover:text-blue-600 line-clamp-2">${DOMPurify.sanitize(paste.title)}</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed line-clamp-3">${isLocked ? '<i class="text-red-400 font-medium">Terkunci sandi.</i>' : excerpt}</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-gray-50 flex items-center gap-2">
+                        <div class="w-6 h-6 rounded-full bg-brand-900 text-white flex items-center justify-center text-[10px] font-bold uppercase">${paste.author.charAt(0)}</div>
+                        <span class="text-sm font-bold text-gray-700">${DOMPurify.sanitize(paste.author)}</span>
+                    </div>
+                `;
+                card.onclick = () => attemptLoadPaste(paste.id);
+                grid.appendChild(card);
+            });
+            gsap.fromTo(grid.children, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.05 });
+        }
+
+
+        // ==========================================
+        // SIMPAN DATA (CREATE) & BACA
         // ==========================================
         async function handleCreatePaste(e) {
             e.preventDefault();
-            
+            if(!currentUser) return openLoginModal(); // Proteksi Ganda
+
             const btn = document.getElementById('btn-publish');
-            btn.disabled = true;
-            btn.innerHTML = 'Menyimpan...';
+            btn.disabled = true; btn.innerHTML = 'Menyimpan...';
 
             const titleInput = document.getElementById('input-title').value.trim();
-            const authorInput = document.getElementById('input-author').value.trim();
             const passwordInput = document.getElementById('input-password').value;
-            const contentHTML = document.getElementById('editor-content').innerHTML.trim();
+            
+            // Sanitasi HTML Anti-XSS
+            const rawHTML = document.getElementById('editor-content').innerHTML.trim();
+            const sanitizedHTML = DOMPurify.sanitize(rawHTML, { ALLOWED_TAGS: ['b', 'i', 'u', 'em', 'strong', 'a', 'p', 'br', 'h1', 'h2', 'blockquote', 'div', 'span'], ALLOWED_ATTR: ['href', 'target', 'class'] });
 
-            if (!titleInput || !contentHTML || contentHTML === '<br>') {
-                alert("Judul dan isi tulisan tidak boleh kosong!");
-                btn.disabled = false;
-                btn.innerHTML = 'Publikasikan';
-                return;
-            }
+            if (!titleInput || !sanitizedHTML) return alert("Judul dan isi tidak boleh kosong!");
 
             const newId = 'p' + Math.random().toString(36).substr(2, 8);
             const today = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 
             const newPasteData = {
                 id: newId,
+                user_id: currentUser.id, // ID Asli dari Google
                 title: titleInput,
-                author: authorInput || 'Anonim',
+                author: currentUser.user_metadata.full_name, // Nama asli Google
                 password: passwordInput,
-                content: contentHTML,
+                content: sanitizedHTML,
                 date: today,
                 timestamp: Date.now()
             };
 
-            if (isSupabaseConfigured) {
-                try {
-                    const { error } = await supabaseClient.from('pastes').insert([newPasteData]);
-                    if (error) throw error;
-                    
-                    pastes.unshift(newPasteData); // Masukkan ke data lokal paling atas
-                } catch (error) {
-                    console.error("Gagal menyimpan:", error.message);
-                    alert("Gagal menyimpan tulisan ke Supabase.");
-                    btn.disabled = false;
-                    btn.innerHTML = 'Publikasikan';
-                    return;
-                }
-            } else {
-                // Mode Mock jika kunci belum diisi
-                pastes.unshift(newPasteData);
+            try {
+                const { error } = await supabaseClient.from('pastes').insert([newPasteData]);
+                if (error) throw error;
+                pastes.unshift(newPasteData); 
+            } catch (error) {
+                alert("Gagal menyimpan ke database.");
+                btn.disabled = false; btn.innerHTML = 'Publikasikan';
+                return;
             }
 
-            btn.disabled = false;
-            btn.innerHTML = 'Publikasikan';
+            btn.disabled = false; btn.innerHTML = 'Publikasikan';
             attemptLoadPaste(newId, passwordInput); 
         }
 
         function attemptLoadPaste(id, providedPassword = null) {
             const paste = pastes.find(p => p.id === id);
-            
-            if (!paste) {
-                alert("Tulisan tidak ditemukan.");
-                navigate('home');
-                return;
-            }
+            if (!paste) { alert("Tulisan tidak ditemukan."); navigate('home'); return; }
 
             if (paste.password && paste.password !== providedPassword) {
                 attemptReadId = id;
-                openPasswordModal();
-            } else {
-                renderReadView(paste);
-            }
+                const modal = document.getElementById('password-modal');
+                modal.classList.remove('pointer-events-none');
+                gsap.to(modal, { opacity: 1, duration: 0.2 });
+                gsap.to('#password-card', { scale: 1, duration: 0.3 });
+            } else renderReadView(paste);
         }
 
         function renderReadView(paste) {
             currentReadId = paste.id;
-            updateUrlParameter(paste.id); 
+            const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?id=${paste.id}`;
+            window.history.pushState({path:newurl}, '', newurl);
             
             document.getElementById('read-title').textContent = paste.title;
             document.getElementById('read-author').textContent = paste.author;
-            document.getElementById('read-avatar').textContent = paste.author.charAt(0).toUpperCase();
             document.getElementById('read-date').textContent = paste.date;
-            document.getElementById('read-id').textContent = 'ID: ' + paste.id.substring(0,5);
-            document.getElementById('read-content').innerHTML = paste.content;
+            document.getElementById('read-content').innerHTML = DOMPurify.sanitize(paste.content);
 
             navigate('read', false);
         }
 
-        // ==========================================
-        // 7. MODAL PASSWORD
-        // ==========================================
-        function openPasswordModal() {
-            const modal = document.getElementById('password-modal');
-            const card = document.getElementById('password-card');
-            const input = document.getElementById('verify-password-input');
-            const err = document.getElementById('password-error');
-            
-            err.classList.add('hidden');
-            input.value = '';
-            
-            modal.classList.remove('pointer-events-none');
-            gsap.to(modal, { opacity: 1, duration: 0.2 });
-            gsap.to(card, { scale: 1, duration: 0.3, ease: "back.out(1.5)" });
-            setTimeout(() => input.focus(), 300);
-        }
-
-        function closePasswordModal() {
-            const modal = document.getElementById('password-modal');
-            const card = document.getElementById('password-card');
-            gsap.to(card, { scale: 0.95, duration: 0.2 });
-            gsap.to(modal, { opacity: 0, duration: 0.2, onComplete: () => {
-                modal.classList.add('pointer-events-none');
-            }});
-        }
-        
-        function cancelPassword() {
-            closePasswordModal();
-            attemptReadId = null;
-            if(currentView !== 'home'){
-               navigate('home');
-            }
-        }
-
-        function verifyPassword(e) {
-            e.preventDefault();
-            const inputVal = document.getElementById('verify-password-input').value;
-            const paste = pastes.find(p => p.id === attemptReadId);
-            
-            if (paste && paste.password === inputVal) {
-                closePasswordModal();
-                renderReadView(paste);
-            } else {
-                document.getElementById('password-error').classList.remove('hidden');
-                gsap.fromTo('#password-card', 
-                    { x: -10 }, 
-                    { x: 10, duration: 0.1, yoyo: true, repeat: 3, onComplete: () => gsap.set('#password-card', {x: 0}) }
-                );
-            }
-        }
-
-        // ==========================================
-        // 8. SALIN TAUTAN (Mendukung GitHub Pages URL)
-        // ==========================================
-        function copyCurrentLink() {
-            if (!currentReadId) return;
-            const shareUrl = window.location.href;
-            
-            const textArea = document.createElement("textarea");
-            textArea.value = shareUrl;
-            document.body.appendChild(textArea);
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                const toast = document.getElementById('toast');
-                gsap.to(toast, { opacity: 1, y: -20, duration: 0.3 });
-                setTimeout(() => gsap.to(toast, { opacity: 0, y: 0, duration: 0.3 }), 3000);
-            } catch (e) {
-                console.error('Copy gagal', e);
-                alert("Gagal menyalin link. Silakan salin manual dari URL bar browser Anda.");
-            }
-            document.body.removeChild(textArea);
-        }
+        // FUNGSI TOOLBAR EDITOR (SAMA SEPERTI SEBELUMNYA)
+        function formatDoc(cmd, val = null) { document.execCommand(cmd, false, val); document.getElementById('editor-content').focus(); }
+        function openInsertModal(type) { document.getElementById('insert-modal').classList.remove('pointer-events-none'); gsap.to('#insert-modal', { opacity: 1, duration: 0.2 }); gsap.to('#insert-card', { scale: 1, duration: 0.3 }); document.getElementById('custom-type').value = type; }
+        function closeInsertModal() { gsap.to('#insert-card', { scale: 0.95, duration: 0.2 }); gsap.to('#insert-modal', { opacity: 0, duration: 0.2, onComplete: () => document.getElementById('insert-modal').classList.add('pointer-events-none')}); }
+        function applyCustomInsert() { const url = document.getElementById('custom-url').value; const txt = document.getElementById('custom-text').value || url; closeInsertModal(); document.getElementById('editor-content').focus(); document.execCommand('insertHTML', false, `<a href="${url}" target="_blank" class="${document.getElementById('custom-type').value === 'button' ? 'custom-btn' : 'text-link'}">${txt}</a>&nbsp;`); }
+        function cancelPassword() { gsap.to('#password-card', { scale: 0.95, duration: 0.2 }); gsap.to('#password-modal', { opacity: 0, duration: 0.2, onComplete: () => document.getElementById('password-modal').classList.add('pointer-events-none')}); if(currentView !== 'home') navigate('home'); }
+        function verifyPassword(e) { e.preventDefault(); const pwd = document.getElementById('verify-password-input').value; const paste = pastes.find(p => p.id === attemptReadId); if (paste && paste.password === pwd) { cancelPassword(); renderReadView(paste); } else { document.getElementById('password-error').classList.remove('hidden'); } }
+        function copyCurrentLink() { const t = document.createElement("textarea"); t.value = window.location.href; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); gsap.to('#toast', { opacity: 1, y: -20, duration: 0.3 }); setTimeout(() => gsap.to('#toast', { opacity: 0, y: 0, duration: 0.3 }), 3000); }
     </script>
 </body>
 </html>
